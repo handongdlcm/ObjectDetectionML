@@ -34,8 +34,14 @@ while True:
     # Resize frame for faster processing
     resized_frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
 
+    # Measure time taken for face detection
+    start_time = time.time()
+
     # Detect faces in the frame
     faces = mtcnn.detect_faces(resized_frame)
+
+    # Calculate elapsed time for face detection
+    detect_faces_time = time.time() - start_time
 
     # Draw bounding boxes around the detected faces
     for face in faces:
@@ -52,8 +58,9 @@ while True:
     fps = 1.0 / elapsed_time if elapsed_time > 0 else 0
     prev_time = current_time
 
-    # Add framerate to the frame
-    cv2.putText(frame, f'FPS: {fps:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    # Add framerate and face detection time to the frame
+    text = f'FPS: {fps:.2f} | Face Detection Time: {detect_faces_time:.4f} sec'
+    cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
     # Display the frame
     cv2.imshow('Frame', frame)
