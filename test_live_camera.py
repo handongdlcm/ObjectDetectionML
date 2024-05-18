@@ -1,4 +1,5 @@
 import cv2
+import time
 from mtcnn import MTCNN
 
 # Initialize the front-facing camera
@@ -14,6 +15,9 @@ mtcnn = MTCNN()
 # Skip frames for faster processing
 skip_frames = 2
 frame_count = 0
+
+# Variables for benchmarking
+prev_time = time.time()
 
 while True:
     # Capture frame-by-frame
@@ -41,6 +45,15 @@ while True:
         w *= 2
         h *= 2
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+    # Calculate framerate
+    current_time = time.time()
+    elapsed_time = current_time - prev_time
+    fps = 1.0 / elapsed_time if elapsed_time > 0 else 0
+    prev_time = current_time
+
+    # Add framerate to the frame
+    cv2.putText(frame, f'FPS: {fps:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
     # Display the frame
     cv2.imshow('Frame', frame)
